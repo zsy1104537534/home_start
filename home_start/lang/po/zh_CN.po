@@ -16,7 +16,7 @@ msgstr "家中开局"
 #. ~ MOD description
 #: modinfo.json
 msgid "Start the Cataclysm in your own flat on an upper floor of a downtown apartment tower.  You wake up next to your bed in a fitting set of clothes and a crowbar is waiting on the bedside furniture, so a locked door is never a dead end.  Your floor has been cleared of monsters; the streets outside have not.  Everything else in the flat is yours to loot."
-msgstr "在市中心一栋公寓楼的高层醒来：你穿着一套合身的衣服，从床边起身，**床边家具上放着一根撬棍**（免得被锁在门里出不去）。你所在的这层楼已清空了怪物，外面的街道则没有。其余东西随你搜刮。"
+msgstr "在市中心一栋公寓楼的高层醒来：你穿着一套合身的衣服，从床边起身，床边家具上放着一根撬棍（免得被锁在门里出不去）。你所在的这层楼已清空了怪物，外面的街道则没有。其余东西随你搜刮。"
 
 #. ~ Scenario name
 #: scenarios.json
