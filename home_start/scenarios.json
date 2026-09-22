@@ -9,8 +9,6 @@
     "professions": [ "prof_homebody" ],
     "start_name": "Downtown Apartment",
     "flags": [ "CITY_START", "LONE_START" ],
-    "start_of_cataclysm": { "hour": 0, "day": 56, "season": "spring", "year": 1 },
-    "start_of_game": { "hour": 8, "day": 61, "season": "spring", "year": 1 },
     "eoc": [ "EOC_home_start" ]
   }
 ]

@@ -2,7 +2,7 @@
 
 A small content mod for **Cataclysm: Dark Days Ahead** that starts your survivor locked inside their own flat on an upper floor of a downtown apartment tower.
 
-* **Version:** 1.0.0
+* **Version:** 1.0.1
 * **Game:** CDDA 0.I and newer experimental builds (developed and tested on build `2026-09-19-2324`, commit `7b2efa5`)
 * **Dependencies:** `dda` only
 * **License:** CC-BY-SA 3.0 (same as the game's content license)
@@ -13,13 +13,13 @@ A small content mod for **Cataclysm: Dark Days Ahead** that starts your survivor
 
 | Piece | Description |
 |---|---|
-| Scenario **Home Start** | Starts inside an upstairs flat of a downtown apartment tower, on foot, alone, five days into the Cataclysm (spring, day 61, 08:00). |
+| Scenario **Home Start** | Starts inside an upstairs flat of a downtown apartment tower, on foot, alone, five days into the Cataclysm (default season length: spring, day 61, 08:00 — the engine derives the dates from the `SEASON_LENGTH` world option, so they follow your settings). |
 | Start location **Apartment Tower (upstairs flat)** | Restricts the start to upper-floor apartment interiors, so you never spawn on a burnt-out ground floor. |
 | Profession **Homebody Survivor** | A civilian in a fitting set of clothes (`dress_shirt`, `jeans`, `socks`, `sneakers`), with no bonus items. |
-| Start script | Wakes you up next to the bed, leaves a **sewing kit** and a **crowbar** somewhere in the flat, and clears monsters from your own floor. |
-| Riot damage patch | Apartment tower interiors no longer generate with `PP_GENERATE_RIOT_DAMAGE` (intact windows, furniture not smashed). |
+| Start script | Wakes you up on a bed in the flat (searching nearby first, then further out), puts a **crowbar** in your inventory so a locked door is never a dead end, drops a **sewing kit** on the floor next to you, and clears monsters from your own floor. |
+| Riot damage patch | Apartment tower interiors (`apartments_con_tower_*`) no longer generate with `PP_GENERATE_RIOT_DAMAGE` — intact windows, furniture not smashed. |
 
-**Design intent:** a quiet, self-contained opening. Your floor is clean and lootable, the streets outside are not, and a crowbar in the flat means a locked door is never a dead end.
+**Design intent:** a quiet, self-contained opening. Your floor is clean and lootable, the streets outside are not.
 
 ## Installation
 
@@ -34,9 +34,13 @@ Notes:
 
 ## Language
 
-Source text is English. A Simplified Chinese translation ships in `lang/mo/zh_CN/LC_MESSAGES/home_start.mo` and is loaded automatically when the game language is Chinese.
+Source text is English. A Simplified Chinese translation ships in `lang/mo/zh_CN/LC_MESSAGES/home_start.mo` and is loaded automatically when the game language is Chinese. The gettext sources (`lang/po/home_start.pot` and `lang/po/zh_CN.po`) are included, so a translation can be edited without touching the compiled `.mo`.
 
-To add another language: create `lang/po/<lang>.po` from `lang/po/home_start.pot`, then compile it with `msgfmt -o lang/mo/<lang>/LC_MESSAGES/home_start.mo lang/po/<lang>.po`.
+To add another language: copy `lang/po/home_start.pot` to `lang/po/<lang>.po`, fill in the `msgstr` lines, then compile it:
+
+```sh
+msgfmt -o home_start/lang/mo/<lang>/LC_MESSAGES/home_start.mo home_start/lang/po/<lang>.po
+```
 
 ## Compatibility
 
@@ -47,17 +51,21 @@ To add another language: create `lang/po/<lang>.po` from `lang/po/home_start.pot
 ## Known limitations / maintenance notes
 
 * The mod references vanilla ids: `apartments_tower_any`, `PP_GENERATE_RIOT_DAMAGE`, `BEGONE_SHADOW`, `f_bed`, `f_bathtub`, `sloc_*` apartment terrains. If upstream renames or removes any of them, the corresponding piece stops working — re-run the check below after game updates.
-* The riot damage patch only affects **newly generated** apartment towers.
-* The start script uses `map_spawn_item` rather than `u_spawn_item`: in 0.I the latter adds nothing unless `force_equip` is set, because the engine passes that flag into the item count argument.
-* Monster clearing uses the vanilla `BEGONE_SHADOW` spell, so it also respects that spell's own limits.
+* The riot damage patch covers `apartments_con_tower_*` only; other apartment mapgens (`mod_tower`, `s_apt`, the apartment-complex set) still generate riot damage.
+* The patch only affects **newly generated** apartment towers, and the mod as a whole only affects **new characters**.
+* About 7 % of apartment doors generate as `t_door_locked_alarm`; prying one open with the crowbar sets off an alarm. Left in on purpose.
+* The **bed** search teleports you onto a bed, not necessarily the nearest one: the engine's location search returns the first match in scan order, so the script deliberately searches 6 → 12 → 24 tiles instead of using one large radius.
+* Monster clearing uses the vanilla `BEGONE_SHADOW` spell, so it respects that spell's own limits.
 
 ## Checking a checkout
 
 ```sh
-# from the game directory (game must not be running)
-cataclysm-tiles.exe --check-mods home_start     # exit code 0 = clean
-json_formatter.exe modinfo.json                     # every JSON file must be style-clean
+# from the game directory (the game must not be running)
+cataclysm-tiles.exe --check-mods home_start                    # exit code 0 = clean
+json_formatter.exe data/mods/home_start/modinfo.json           # run for every .json file in home_start/
 ```
+
+Every JSON file must be style-clean, and every user-facing English string must have a `msgid` in the Chinese `.mo`.
 
 ---
 
@@ -67,14 +75,14 @@ json_formatter.exe modinfo.json                     # every JSON file must be st
 
 | 内容 | 说明 |
 |---|---|
-| 场景「家中开局」 | 在大灾变第 5 天（春季第 61 天 08:00）于公寓楼楼上的住家里醒来，独自一人。 |
+| 场景「家中开局」 | 在公寓楼楼上的住家里醒来，独自一人。默认季节长度（91 天）下是春季第 61 天 08:00，即大灾变后第 5 天；日期由引擎按你的「赛季长度」设置自动推算。 |
 | 开局地点「公寓楼（楼上住家）」 | 限定只在高层的公寓室内开局，不会落在被烧毁的一楼。 |
 | 职业「居家幸存者」 | 普通市民，开局穿着**合身的一套衣服**（衬衫/牛仔裤/袜子/运动鞋），没有额外奖励物品。 |
-| 开局脚本 | 在床边醒来，屋里留一个**针线盒**和一根**撬棍**，并清空你所在楼层的怪物。 |
-| 暴乱破坏补丁 | 公寓楼室内不再生成暴乱破坏（窗户完整、家具没被砸）。 |
+| 开局脚本 | 在床上醒来（床是**分阶段**就近找的：先 6 格、再 12 格、再 24 格）；**撬棍直接放进背包**（保证不会被锁在门里）、针线盒丢在脚下；清空你所在**楼层**的怪物。 |
+| 暴乱破坏补丁 | 公寓塔楼室内（`apartments_con_tower_*`）不再生成暴乱破坏（窗户完整、家具没被砸）。 |
 
 **安装**：把 `home_start` 文件夹放进游戏目录的 `data/mods/`，然后**开新世界**时勾选它；职业只有「居家幸存者」，用「自定义角色」创建即可（**不要用旧的角色预设**，预设会带自己的存档物品）。
 
 **兼容性**：可以和 `classic_zombies`、`Only_Wildlife`、`Magiclysm` 等共存；**不能**和删掉城市的完全转换类（`innawood`、`The Backrooms`、`Sky Island`、`Defense Mode`）一起用。
 
-**注意**：所有改动只对**新角色/新地图**生效。
+**注意**：所有改动只对**新角色/新地图**生效；约 7% 的公寓门是带警报的锁门（`t_door_locked_alarm`），撬开会响警报——这是故意保留的。

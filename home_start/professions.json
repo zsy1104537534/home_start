@@ -4,7 +4,7 @@
     "id": "prof_homebody",
     "name": "Homebody Survivor",
     "description": "You fled home from the street on the day of the Cataclysm and snapped the key off in the lock getting the door shut.  You have spent the days since in a low fever, drifting in and out of it: something to eat when you were hungry, a little water when you were thirsty.  By the time you came to your senses, it was another world outside.",
-    "//": "A fitting outfit at start: dress_shirt (a pocket shirt, no VARSIZE so it always fits) plus jeans, socks and sneakers.  Profession items are freshly generated and skip the random-sizing used for map loot, so they cannot spawn as 'too big' or 'too small'.",
+    "//": "A fitting outfit at start: dress_shirt (a pocket shirt; it inherits VARSIZE from buttonshirt) plus jeans, socks and sneakers.  The outfit fits because profession items are freshly generated and get the FIT flag automatically for anything with VARSIZE (profession.cpp), unlike map loot which can be generated 'too large' or 'too small'.",
     "points": -1,
     "flags": [ "NO_BONUS_ITEMS" ],
     "items": {
