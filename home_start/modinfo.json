@@ -8,6 +8,6 @@
     "description": "Start the Cataclysm in your own flat on an upper floor of a downtown apartment tower.  You wake up next to your bed in a fitting set of clothes and a crowbar is waiting on the bedside furniture, so a locked door is never a dead end.  Your floor has been cleared of monsters; the streets outside have not.  Everything else in the flat is yours to loot.",
     "category": "content",
     "dependencies": [ "dda" ],
-    "version": "1.0.3"
+    "version": "1.0.4"
   }
 ]

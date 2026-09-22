@@ -2,7 +2,7 @@
 
 A small content mod for **Cataclysm: Dark Days Ahead** that starts your survivor locked inside their own flat on an upper floor of a downtown apartment tower.
 
-* **Version:** 1.0.3
+* **Version:** 1.0.4
 * **Game:** CDDA 0.I and newer experimental builds (developed and tested on build `2026-09-19-2324`, commit `7b2efa5`)
 * **Dependencies:** `dda` only
 * **License:** CC-BY-SA 3.0 (same as the game's content license)
@@ -34,7 +34,7 @@ Notes:
 
 ## Language
 
-Source text is English. A Simplified Chinese translation ships in `lang/mo/zh_CN/LC_MESSAGES/home_start.mo` and is loaded automatically when the game language is Chinese. The gettext sources (`lang/po/home_start.pot` and `lang/po/zh_CN.po`) are included, so a translation can be edited without touching the compiled `.mo`.
+Source text is English. A Simplified Chinese translation ships in `lang/mo/zh_CN/LC_MESSAGES/home_start.mo` and is loaded automatically when the game language is Chinese. The gettext sources (`lang/po/home_start.pot` and `lang/po/zh_CN.po`) are included, so a translation can be edited without touching the compiled `.mo`. Both files contain every `msgid` exactly once — gettext tooling refuses to compile a catalogue that repeats one (`duplicate message definition`) — so strings that appear twice in the mod (the mod name is also the scenario name) share a single entry whose `#:` line lists both sources.
 
 To add another language: copy `lang/po/home_start.pot` to `lang/po/<lang>.po`, fill in the `msgstr` lines, then compile it:
 

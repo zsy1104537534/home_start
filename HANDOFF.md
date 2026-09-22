@@ -27,7 +27,8 @@ This document exists so that **anyone — a human developer or an AI assistant (
 ├── .gitattributes     # forces LF so JSON stays byte-identical to json_formatter output
 ├── HANDOFF.md         # this file
 └── home_start/        # ← this folder is the mod; copy it into <game>/mods/  (NOT data/mods/ - see §5)
-    ├── modinfo.json       # MOD_INFO: id home_start, category content, dependency dda, version is kept in sync with modinfo.json
+    ├── modinfo.json       # MOD_INFO: id home_start, category content, dependency dda. The version here is the
+    │                      #   single source of truth - build-mo.js reads it into the .pot/.po/.mo headers.
     ├── scenarios.json     # scenario id "home_start": allowed_locs [sloc_apt_interior], profession
     │                      #   prof_homebody, flags CITY_START + LONE_START, eoc [EOC_home_start].
     │                      #   Start dates are left at the vanilla defaults on purpose - the engine
@@ -54,7 +55,7 @@ A quiet, self-contained opening. Your floor is clean and lootable; the streets o
 
 1. Shows a short popup so the player knows where they are.
 2. Teleports the player onto a bed in the flat, searching with **staged radii: 6 → 12 → 24 tiles**, then a bathtub within 24 tiles as the last fallback. The staging is not cosmetic — see §5: a single large radius would always pick the north-west-most bed of the floor. Roughly 7 % of apartment doors generate as `t_door_locked_alarm`, which prying will set off; that is left as an intended surprise rather than patched.
-3. Leaves a **crowbar** on furniture 1-2 tiles from the player (the minimum radius skips the tile they are lying on, so it never lands on the bed); if there is no such furniture, it goes straight into the inventory with `u_spawn_item`. Either way a locked door is never a dead end.
+3. Leaves a **crowbar** on furniture 1-2 tiles from the player (the minimum radius skips the tile they are lying on, so it never lands on the bed); if there is no such furniture, `u_spawn_item` hands it over instead, so it ends up in your **hands** rather than in a pocket (a crowbar is too long to fit one — see §5 on `i_add_or_drop`). Either way a locked door is never a dead end.
 4. Clears the player's floor: `u_run_monster_eocs` runs the vanilla `BEGONE_SHADOW` spell on every monster within 60 tiles that is **indoors**, plus everything within 20 tiles regardless. Note that inside `u_run_monster_eocs` the talker `u` is the **monster** being processed, not the player — that is exactly what makes the `{"not": "u_is_outside"}` filter mean "indoor monsters".
 5. Does **not** touch hunger or thirst: the character starts in a normal state (an earlier iteration fed the player and it was removed on request).
 
@@ -84,7 +85,9 @@ The first run after editing mod files often prints `Stale game data detected` (f
 
 Real errors appear in `config/debug.log` as `Json error: file …, at line X, character Y:` and the **reason is on the following line**.
 
-Translation coverage: every user-facing English string must exist as a `msgid` in `home_start/lang/mo/zh_CN/LC_MESSAGES/home_start.mo`. The `.po`/`.pot` sources in `home_start/lang/po/` are generated from the JSON by the project's `build-mo.js` helper; `msgfmt -o <out.mo> zh_CN.po` produces a byte-equivalent file.
+Translation coverage: every user-facing English string must exist as a `msgid` in `home_start/lang/mo/zh_CN/LC_MESSAGES/home_start.mo`. The `.po`/`.pot` sources in `home_start/lang/po/` are generated from the JSON by the project's `build-mo.js` helper, which **merges identical strings into a single entry** — `Home Start` is both the mod name and the scenario name, and gettext tooling refuses to compile a catalogue that repeats a `msgid` (`duplicate message definition`); a merged entry lists every source file on one `#:` line and every origin after `#.`.
+
+The shipped `.mo` is reproducible: compiling `zh_CN.po` with the gettext compiler that ships with Python (`Tools/i18n/msgfmt.py`) produces a **byte-identical** file — sha256 `a10e481cf1fcb65ebfa6451ef5d5bb72bf05ce1db7d033df88f26fc042cd0754`, 2764 bytes, 8 strings. No GNU `msgfmt` was available on the development machine, so that compiler check was run with the Python tool; note that GNU `msgfmt` writes a hash table by default, so its output can differ byte-wise while staying functionally identical.
 
 ## 7. Known limitations / maintenance risks
 
@@ -104,6 +107,8 @@ gh auth setup-git
 git add -A && git commit -m "…" && git push
 gh release create v<version> <zip> --title "Home Start <version>" --notes-file <notes.md>
 ```
+
+If `git` cannot reach `github.com:443` (it is intermittently blocked on the development machine's network, while `gh` keeps working because it talks to `api.github.com`), publishing still works through the Git Data API: POST blobs → tree (with `base_tree`) → commit → PATCH the `main` ref, then `gh release create`. **Tag every release with the exact commit that was published, and never move an existing tag onto a different commit** — a tag that was re-pointed after its asset had been replaced is exactly how v1.0.3 briefly shipped a tag and a ZIP that disagreed.
 
 The release ZIP contains a top-level `home_start/` folder, meant to be extracted into the game's **`mods/`** directory (the user mod folder — see §5 for why `data/mods/` breaks translations).
 
