@@ -9,7 +9,7 @@ A small content mod for **Cataclysm: Dark Days Ahead** that starts your survivor
 * **Version:** 1.0.8
 * **Game:** CDDA **0.I** stable (developed and tested on `0.I-1`, build `2026-09-19-2324`, commit `7b2efa5`)
   * **0.H and older are not supported.** The start script uses the `u_run_monster_eocs` effect, which does not exist there (`src/npctalk.cpp` — absent in `0.H`, present in `0.I`), so the scenario fails to load.
-  * **On experimental builds** the mod loads and plays normally, and riot damage is handled there too: the patch deletes the new-style `post_process_generators` entry as well as the old flag, in one file — see the note below the installation steps. That experimental path has **not been verified in game yet** (the author develops on 0.I-1).
+  * **On experimental builds** the mod loads and plays normally, and riot damage is handled there too: the patch deletes the new-style `post_process_generators` entry as well as the old flag, in one file — see the note below the installation steps. That experimental path is **theoretically compatible but has not been verified in game yet** (the author plays and tests on 0.I-1).
 * **Dependencies:** `dda` only
 * **License:** CC-BY-SA 3.0 (same as the game's content license)
 
@@ -50,7 +50,7 @@ A small content mod for **Cataclysm: Dark Days Ahead** that starts your survivor
 
 Riot damage was moved upstream from the `PP_GENERATE_RIOT_DAMAGE` overmap flag to a `post_process_generators: [ "riot_damage" ]` entry, so `riot_patch.json` now deletes **both** keys in a single `delete` object: 0.I reads the flag one and ignores the other, experimental builds read the generator one and ignore the flag. A key a given version does not know is silently ignored — CDDA calls `allow_omitted_members()` while reading a `delete` object — so there is nothing extra to install or enable.
 
-Honest caveat: the 0.I side is what the author plays and tests; **the experimental side has not been verified in game** (no experimental install on the development machine). If riot damage still appears on an experimental build, that is a bug worth reporting.
+Honest caveat: the 0.I side is what the author plays and tests; **the experimental side is **theoretically compatible but has not been verified in game**** (no experimental install on the development machine). If riot damage still appears on an experimental build, that is a bug worth reporting.
 Notes: **new characters**; existing saves keep whatever they were created with.
 * Using an existing world is not recommended. If you do add this mod to one, only newly generated map areas get the patch.
 
@@ -113,7 +113,7 @@ Every JSON file must be style-clean, and every user-facing English string must h
 **用户 mod 目录**不一定和 exe 同级：Windows / Linux 官方压缩包（便携版）是 exe 旁边的 `mods\`；**macOS** 是 `~/Library/Application Support/Cataclysm/mods/`；**Linux 包管理器安装**是 `~/.local/share/cataclysm-dda/mods/`（或 `$XDG_DATA_HOME/cataclysm-dda/mods/`，很老的版本用 `~/.cataclysm-dda/mods/`）。**刚解压的游戏没有 `mods\` 这个文件夹**，先启动一次游戏它就会自己建，也可以自己新建。**绝对不要放 `data\mods\`** —— 游戏只从用户 mod 目录读第三方 mod 自带的翻译，放 `data\mods\` 虽然能玩，但**中文不会生效**。**升级前先删掉旧的 `home_start` 文件夹**，两个同 id 的文件夹会让游戏报 `there is already a mod with ident home_start`。
 
 **暴乱破坏：一份文件同时兼容 0.I 和实验版** —— 上游把暴乱破坏从 `PP_GENERATE_RIOT_DAMAGE` 这个 flag 改成了 `post_process_generators: ["riot_damage"]`，所以 `riot_patch.json` 在同一个 `delete` 里**两个键都删**：0.I 认 flag 那条、忽略另一条，实验版认生成器那条、忽略 flag 那条；**当前版本不认识的那个键会被静默忽略**（引擎读 `delete` 时调用了 `allow_omitted_members()`），所以不需要额外装或勾任何东西。老实说一句：0.I 这条是作者本机实测的，**实验版那条还没在游戏里实测过**，如果实验版上暴乱破坏依旧那就是 bug，欢迎回报。
-**版本要求**：需要 **0.I** 稳定版（`0.I` / `0.I-1`，本 mod 在 `2026-09-19-2324` 上开发验证）；**0.H 及更早不支持**（开局脚本用的 `u_run_monster_eocs` 那些版本里没有，场景会加载失败）；**实验版**能正常游玩，暴乱破坏也由同一份文件处理（把新式的 `post_process_generators` 和旧的 flag 一起删，见安装步骤后的说明）；**实验版这条路还没在游戏里实测过**（作者本机是 0.I-1）。
+**版本要求**：需要 **0.I** 稳定版（`0.I` / `0.I-1`，本 mod 在 `2026-09-19-2324` 上开发验证）；**0.H 及更早不支持**（开局脚本用的 `u_run_monster_eocs` 那些版本里没有，场景会加载失败）；**实验版**能正常游玩，暴乱破坏也由同一份文件处理（把新式的 `post_process_generators` 和旧的 flag 一起删，见安装步骤后的说明）；**实验版：理论上兼容，但尚未在游戏里实测**（作者本机是 0.I-1，写法和上游一致，但没人真的在实验版上跑过）。
 
 **兼容性**：可以和 `classic_zombies`、`Only_Wildlife`、`Magiclysm` 等共存；**不能**和删掉城市的完全转换类（`innawood`、`The Backrooms`、`Sky Island`、`Defense Mode`）一起用；和同样修改这些大地图地形（`apartments_con_tower_*`）的 mod（例如 **Alternative Map Key**）一起用时，谁覆盖谁取决于加载顺序，**表现只是大地图图标/颜色**，不会报错。
 
