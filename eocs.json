@@ -1,7 +1,7 @@
 [
   {
     "type": "effect_on_condition",
-    "id": "EOC_shower_start",
+    "id": "EOC_home_start",
     "//": "Start script: 1) message popup so the player knows where they are; 2) teleport next to the bed (bathtub as fallback), because the engine's own start placement scoring tends to drop the player in a corridor or at the map edge; 3) leave a sewing kit and a crowbar in the flat - on nearby furniture if there is any, otherwise on the floor at the player's feet; 4) clear monsters on the player's own floor (60 tiles) and everything within 20 tiles.  Does not modify hunger or thirst: the character starts in a normal state.",
     "eoc_type": "ACTIVATION",
     "effect": [
@@ -57,7 +57,7 @@
       {
         "u_run_monster_eocs": [
           {
-            "id": "EOC_shower_banish_indoor",
+            "id": "EOC_home_banish_indoor",
             "condition": { "not": "u_is_outside" },
             "effect": [ { "u_cast_spell": { "id": "BEGONE_SHADOW" } } ]
           }
@@ -65,7 +65,7 @@
         "monster_range": 60
       },
       {
-        "u_run_monster_eocs": [ { "id": "EOC_shower_banish_near", "effect": [ { "u_cast_spell": { "id": "BEGONE_SHADOW" } } ] } ],
+        "u_run_monster_eocs": [ { "id": "EOC_home_banish_near", "effect": [ { "u_cast_spell": { "id": "BEGONE_SHADOW" } } ] } ],
         "monster_range": 20
       }
     ]

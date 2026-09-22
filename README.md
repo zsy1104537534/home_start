@@ -1,4 +1,4 @@
-# Bathroom Start
+# Home Start
 
 A small content mod for **Cataclysm: Dark Days Ahead** that starts your survivor locked inside their own flat on an upper floor of a downtown apartment tower.
 
@@ -13,7 +13,7 @@ A small content mod for **Cataclysm: Dark Days Ahead** that starts your survivor
 
 | Piece | Description |
 |---|---|
-| Scenario **Bathroom Start** | Starts inside an upstairs flat of a downtown apartment tower, on foot, alone, five days into the Cataclysm (spring, day 61, 08:00). |
+| Scenario **Home Start** | Starts inside an upstairs flat of a downtown apartment tower, on foot, alone, five days into the Cataclysm (spring, day 61, 08:00). |
 | Start location **Apartment Tower (upstairs flat)** | Restricts the start to upper-floor apartment interiors, so you never spawn on a burnt-out ground floor. |
 | Profession **Homebody Survivor** | A civilian in a fitting set of clothes (`dress_shirt`, `jeans`, `socks`, `sneakers`), with no bonus items. |
 | Start script | Wakes you up next to the bed, leaves a **sewing kit** and a **crowbar** somewhere in the flat, and clears monsters from your own floor. |
@@ -23,9 +23,9 @@ A small content mod for **Cataclysm: Dark Days Ahead** that starts your survivor
 
 ## Installation
 
-1. Download the repository (or a release ZIP) and put the folder named `bathroom_start` into your game's `data/mods/` directory.
-2. Create a **new world** and enable **Bathroom Start** in the mod list.
-3. Pick the *Bathroom Start* scenario — only the *Homebody Survivor* profession is offered. A custom character works fine; **do not use an old character preset**, since presets carry their own saved inventory.
+1. Download the repository (or a release ZIP) and put the folder named `home_start` into your game's `data/mods/` directory.
+2. Create a **new world** and enable **Home Start** in the mod list.
+3. Pick the *Home Start* scenario — only the *Homebody Survivor* profession is offered. A custom character works fine; **do not use an old character preset**, since presets carry their own saved inventory.
 
 Notes:
 
@@ -34,9 +34,9 @@ Notes:
 
 ## Language
 
-Source text is English. A Simplified Chinese translation ships in `lang/mo/zh_CN/LC_MESSAGES/bathroom_start.mo` and is loaded automatically when the game language is Chinese.
+Source text is English. A Simplified Chinese translation ships in `lang/mo/zh_CN/LC_MESSAGES/home_start.mo` and is loaded automatically when the game language is Chinese.
 
-To add another language: create `lang/po/<lang>.po` from `lang/po/bathroom_start.pot`, then compile it with `msgfmt -o lang/mo/<lang>/LC_MESSAGES/bathroom_start.mo lang/po/<lang>.po`.
+To add another language: create `lang/po/<lang>.po` from `lang/po/home_start.pot`, then compile it with `msgfmt -o lang/mo/<lang>/LC_MESSAGES/home_start.mo lang/po/<lang>.po`.
 
 ## Compatibility
 
@@ -55,25 +55,25 @@ To add another language: create `lang/po/<lang>.po` from `lang/po/bathroom_start
 
 ```sh
 # from the game directory (game must not be running)
-cataclysm-tiles.exe --check-mods bathroom_start     # exit code 0 = clean
+cataclysm-tiles.exe --check-mods home_start     # exit code 0 = clean
 json_formatter.exe modinfo.json                     # every JSON file must be style-clean
 ```
 
 ---
 
-# 浴室开局（中文说明）
+# 家中开局（中文说明）
 
 一个给 **《大灾变：黑暗之日》** 用的小型内容 mod：让你在自己位于市中心公寓楼**高层**的家里开局。
 
 | 内容 | 说明 |
 |---|---|
-| 场景「浴室开局」 | 在大灾变第 5 天（春季第 61 天 08:00）于公寓楼楼上的住家里醒来，独自一人。 |
+| 场景「家中开局」 | 在大灾变第 5 天（春季第 61 天 08:00）于公寓楼楼上的住家里醒来，独自一人。 |
 | 开局地点「公寓楼（楼上住家）」 | 限定只在高层的公寓室内开局，不会落在被烧毁的一楼。 |
 | 职业「居家幸存者」 | 普通市民，开局穿着**合身的一套衣服**（衬衫/牛仔裤/袜子/运动鞋），没有额外奖励物品。 |
 | 开局脚本 | 在床边醒来，屋里留一个**针线盒**和一根**撬棍**，并清空你所在楼层的怪物。 |
 | 暴乱破坏补丁 | 公寓楼室内不再生成暴乱破坏（窗户完整、家具没被砸）。 |
 
-**安装**：把 `bathroom_start` 文件夹放进游戏目录的 `data/mods/`，然后**开新世界**时勾选它；职业只有「居家幸存者」，用「自定义角色」创建即可（**不要用旧的角色预设**，预设会带自己的存档物品）。
+**安装**：把 `home_start` 文件夹放进游戏目录的 `data/mods/`，然后**开新世界**时勾选它；职业只有「居家幸存者」，用「自定义角色」创建即可（**不要用旧的角色预设**，预设会带自己的存档物品）。
 
 **兼容性**：可以和 `classic_zombies`、`Only_Wildlife`、`Magiclysm` 等共存；**不能**和删掉城市的完全转换类（`innawood`、`The Backrooms`、`Sky Island`、`Defense Mode`）一起用。
 
