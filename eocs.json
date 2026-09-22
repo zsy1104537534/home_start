@@ -1,0 +1,73 @@
+[
+  {
+    "type": "effect_on_condition",
+    "id": "EOC_shower_start",
+    "//": "Start script: 1) message popup so the player knows where they are; 2) teleport next to the bed (bathtub as fallback), because the engine's own start placement scoring tends to drop the player in a corridor or at the map edge; 3) leave a sewing kit and a crowbar in the flat - on nearby furniture if there is any, otherwise on the floor at the player's feet; 4) clear monsters on the player's own floor (60 tiles) and everything within 20 tiles.  Does not modify hunger or thirst: the character starts in a normal state.",
+    "eoc_type": "ACTIVATION",
+    "effect": [
+      {
+        "u_message": "You sit up in bed, your head still swimming.\n\nOutside the window, there are more of them than there were a few days ago.",
+        "popup": true
+      },
+      {
+        "u_location_variable": { "u_val": "wake_spot" },
+        "furniture": "f_bed",
+        "target_min_radius": 0,
+        "target_max_radius": 40,
+        "passable_only": true,
+        "true_eocs": [ { "id": "EOC_wake_tp_bed", "effect": [ { "u_teleport": { "u_val": "wake_spot" }, "force": true } ] } ],
+        "false_eocs": [
+          {
+            "id": "EOC_wake_find_bath",
+            "effect": [
+              {
+                "u_location_variable": { "u_val": "wake_spot" },
+                "furniture": "f_bathtub",
+                "target_min_radius": 0,
+                "target_max_radius": 40,
+                "passable_only": true,
+                "true_eocs": [ { "id": "EOC_wake_tp_bath", "effect": [ { "u_teleport": { "u_val": "wake_spot" }, "force": true } ] } ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "u_location_variable": { "u_val": "home_stash" },
+        "furniture": "",
+        "target_min_radius": 1,
+        "target_max_radius": 10,
+        "true_eocs": [
+          {
+            "id": "EOC_stash_on_furniture",
+            "effect": [
+              { "map_spawn_item": "sewing_kit", "loc": { "u_val": "home_stash" } },
+              { "map_spawn_item": "crowbar", "loc": { "u_val": "home_stash" } }
+            ]
+          }
+        ],
+        "false_eocs": [
+          {
+            "id": "EOC_stash_on_floor",
+            "//": "No furniture nearby: drop both items at the player's feet.  Note that in 0.I the u_spawn_item effect adds nothing unless force_equip is set (the engine passes that flag into the item count), so map_spawn_item is used instead.",
+            "effect": [ { "map_spawn_item": "sewing_kit" }, { "map_spawn_item": "crowbar" } ]
+          }
+        ]
+      },
+      {
+        "u_run_monster_eocs": [
+          {
+            "id": "EOC_shower_banish_indoor",
+            "condition": { "not": "u_is_outside" },
+            "effect": [ { "u_cast_spell": { "id": "BEGONE_SHADOW" } } ]
+          }
+        ],
+        "monster_range": 60
+      },
+      {
+        "u_run_monster_eocs": [ { "id": "EOC_shower_banish_near", "effect": [ { "u_cast_spell": { "id": "BEGONE_SHADOW" } } ] } ],
+        "monster_range": 20
+      }
+    ]
+  }
+]

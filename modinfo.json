@@ -1,0 +1,13 @@
+[
+  {
+    "type": "MOD_INFO",
+    "id": "bathroom_start",
+    "name": "Bathroom Start",
+    "authors": [ "zsy1104537534" ],
+    "maintainers": [ "zsy1104537534" ],
+    "description": "Start the Cataclysm in your own flat on an upper floor of a downtown apartment tower.  You wake up next to your bed in a fitting set of clothes, your floor has been cleared of monsters while the streets outside have not, and the flat holds a sewing kit and a crowbar for the locked doors.  Everything else in the flat is yours to loot.",
+    "category": "content",
+    "dependencies": [ "dda" ],
+    "version": "1.0.0"
+  }
+]

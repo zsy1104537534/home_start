@@ -1,0 +1,16 @@
+[
+  {
+    "type": "scenario",
+    "id": "shower_start",
+    "name": "Bathroom Start",
+    "points": 0,
+    "description": "On the day of the Cataclysm you ran home through the crowds in the street.  You threw the door shut so hard that the key snapped off in the lock, leaving half of it stuck in the door, but at least you made it inside.\n\nFor the next few days you ran a low fever and drifted through them: you grabbed something to eat when you were hungry, drank a little water when you were thirsty, and slept away most of the rest.\n\nBy the time you finally came to your senses, it was already another world outside.",
+    "allowed_locs": [ "sloc_apt_interior" ],
+    "professions": [ "prof_homebody" ],
+    "start_name": "Downtown Apartment",
+    "flags": [ "CITY_START", "LONE_START" ],
+    "start_of_cataclysm": { "hour": 0, "day": 56, "season": "spring", "year": 1 },
+    "start_of_game": { "hour": 8, "day": 61, "season": "spring", "year": 1 },
+    "eoc": [ "EOC_shower_start" ]
+  }
+]

@@ -1,0 +1,16 @@
+[
+  {
+    "type": "start_location",
+    "id": "sloc_apt_interior",
+    "name": "Apartment Tower (upstairs flat)",
+    "//": "公寓塔【楼上】室内：这些地形只出现在 z>=1 的楼层（一楼是 _000/_010/_100/_110），所以不会再把玩家丢在一楼。不加 ALLOW_OUTSIDE，保证落在楼里。",
+    "terrain": [
+      "apartments_con_tower_002",
+      "apartments_con_tower_102",
+      "apartments_con_tower_012",
+      "apartments_con_tower_112",
+      "apartments_con_tower_013",
+      "apartments_con_tower_113"
+    ]
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "type": "overmap_terrain",
+    "//": "让公寓楼的【室内各层】不带随机暴乱损毁：窗户完整、家具不被砸、没有血迹和火灾。必须写 copy-from（继承自抽象基类）否则会缺 see_cost 等必填项；delete 用来移除从基类继承来的 PP_GENERATE_RIOT_DAMAGE 标志。",
+    "id": [
+      "apartments_con_tower_000",
+      "apartments_con_tower_002",
+      "apartments_con_tower_010",
+      "apartments_con_tower_011",
+      "apartments_con_tower_012",
+      "apartments_con_tower_013",
+      "apartments_con_tower_100",
+      "apartments_con_tower_102",
+      "apartments_con_tower_110",
+      "apartments_con_tower_111",
+      "apartments_con_tower_112",
+      "apartments_con_tower_113"
+    ],
+    "copy-from": "apartments_tower_any",
+    "delete": { "flags": [ "PP_GENERATE_RIOT_DAMAGE" ] }
+  }
+]
