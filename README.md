@@ -2,7 +2,7 @@
 
 A small content mod for **Cataclysm: Dark Days Ahead** that starts your survivor locked inside their own flat on an upper floor of a downtown apartment tower.
 
-* **Version:** 1.0.1
+* **Version:** 1.0.2
 * **Game:** CDDA 0.I and newer experimental builds (developed and tested on build `2026-09-19-2324`, commit `7b2efa5`)
 * **Dependencies:** `dda` only
 * **License:** CC-BY-SA 3.0 (same as the game's content license)
@@ -16,14 +16,14 @@ A small content mod for **Cataclysm: Dark Days Ahead** that starts your survivor
 | Scenario **Home Start** | Starts inside an upstairs flat of a downtown apartment tower, on foot, alone, five days into the Cataclysm (default season length: spring, day 61, 08:00 — the engine derives the dates from the `SEASON_LENGTH` world option, so they follow your settings). |
 | Start location **Apartment Tower (upstairs flat)** | Restricts the start to upper-floor apartment interiors, so you never spawn on a burnt-out ground floor. |
 | Profession **Homebody Survivor** | A civilian in a fitting set of clothes (`dress_shirt`, `jeans`, `socks`, `sneakers`), with no bonus items. |
-| Start script | Wakes you up on a bed in the flat (searching nearby first, then further out), puts a **crowbar** in your inventory so a locked door is never a dead end, drops a **sewing kit** on the floor next to you, and clears monsters from your own floor. |
+| Start script | Wakes you up on a bed in the flat (searching nearby first, then further out), leaves a **crowbar** on a piece of furniture 1-2 tiles away — never on the bed you wake on — so a locked door is never a dead end, and clears monsters from your own floor. |
 | Riot damage patch | Apartment tower interiors (`apartments_con_tower_*`) no longer generate with `PP_GENERATE_RIOT_DAMAGE` — intact windows, furniture not smashed. |
 
 **Design intent:** a quiet, self-contained opening. Your floor is clean and lootable, the streets outside are not.
 
 ## Installation
 
-1. Download the release ZIP (or clone this repository — the mod itself is the `home_start/` folder inside it) and put the folder named `home_start` into your game's `data/mods/` directory.
+1. Download the release ZIP (or clone this repository — the mod itself is the `home_start/` folder inside it) and put the folder named `home_start` into your game's **`mods/`** directory — the one next to `cataclysm-tiles.exe`, **not** `data/mods/`. CDDA only loads a third-party mod's own translation files from `mods/`; a mod in `data/mods/` still runs, but its bundled translation (the Chinese one here) is never loaded.
 2. Create a **new world** and enable **Home Start** in the mod list.
 3. Pick the *Home Start* scenario — only the *Homebody Survivor* profession is offered. A custom character works fine; **do not use an old character preset**, since presets carry their own saved inventory.
 
@@ -62,7 +62,7 @@ msgfmt -o home_start/lang/mo/<lang>/LC_MESSAGES/home_start.mo home_start/lang/po
 ```sh
 # from the game directory (the game must not be running)
 cataclysm-tiles.exe --check-mods home_start                    # exit code 0 = clean
-json_formatter.exe data/mods/home_start/modinfo.json           # run for every .json file in home_start/
+json_formatter.exe mods/home_start/modinfo.json               # run for every .json file in home_start/
 ```
 
 Every JSON file must be style-clean, and every user-facing English string must have a `msgid` in the Chinese `.mo`.
@@ -78,10 +78,10 @@ Every JSON file must be style-clean, and every user-facing English string must h
 | 场景「家中开局」 | 在公寓楼楼上的住家里醒来，独自一人。默认季节长度（91 天）下是春季第 61 天 08:00，即大灾变后第 5 天；日期由引擎按你的「赛季长度」设置自动推算。 |
 | 开局地点「公寓楼（楼上住家）」 | 限定只在高层的公寓室内开局，不会落在被烧毁的一楼。 |
 | 职业「居家幸存者」 | 普通市民，开局穿着**合身的一套衣服**（衬衫/牛仔裤/袜子/运动鞋），没有额外奖励物品。 |
-| 开局脚本 | 在床上醒来（床是**分阶段**就近找的：先 6 格、再 12 格、再 24 格）；**撬棍直接放进背包**（保证不会被锁在门里）、针线盒丢在脚下；清空你所在**楼层**的怪物。 |
+| 开局脚本 | 在床上醒来（床是**分阶段**就近找的：先 6 格、再 12 格、再 24 格）；**撬棍放在床边 1~2 格内的家具上**（绝不放在你躺的那张床上；床边没有家具时才直接放进背包），免得被锁在门里；清空你所在**楼层**的怪物。 |
 | 暴乱破坏补丁 | 公寓塔楼室内（`apartments_con_tower_*`）不再生成暴乱破坏（窗户完整、家具没被砸）。 |
 
-**安装**：把 `home_start` 文件夹放进游戏目录的 `data/mods/`，然后**开新世界**时勾选它；职业只有「居家幸存者」，用「自定义角色」创建即可（**不要用旧的角色预设**，预设会带自己的存档物品）。
+**安装**：把 `home_start` 文件夹放进游戏目录的 **`mods\`**（和 `cataclysm-tiles.exe` 同级那个），**不要**放 `data\mods\` —— 游戏只从 `mods\` 读取第三方 mod 自带的翻译，放 `data\mods\` 虽然能玩，但**中文不会生效**。然后**开新世界**时勾选它；职业只有「居家幸存者」，用「自定义角色」创建即可（**不要用旧的角色预设**，预设会带自己的存档物品）。
 
 **兼容性**：可以和 `classic_zombies`、`Only_Wildlife`、`Magiclysm` 等共存；**不能**和删掉城市的完全转换类（`innawood`、`The Backrooms`、`Sky Island`、`Defense Mode`）一起用。
 
