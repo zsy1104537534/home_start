@@ -40,8 +40,10 @@ This document exists so that **anyone — a human developer or an AI assistant (
     ├── start_locations.json  # start_location id "sloc_apt_interior": upper-floor apartment tower
     │                      #   terrains only (no ALLOW_OUTSIDE, so you never spawn on the ground floor)
     ├── eocs.json          # start script, see §4
-    ├── riot_patch.json    # overmap_terrain patch: removes PP_GENERATE_RIOT_DAMAGE from
-    │                      #   apartments_con_tower_* interiors (copy-from apartments_tower_any + delete)
+    ├── riot_patch.json    # overmap_terrain patch for the apartment tower interiors, copy-from
+    │                      #   apartments_tower_any (required for see_cost etc.). One `delete` removes
+    │                      #   BOTH keys: the flags PP_GENERATE_RIOT_DAMAGE (0.I) and the
+    │                      #   post_process_generators entry riot_damage (experimental builds).
     └── lang/
         ├── po/home_start.pot      # gettext template (generated)
         ├── po/zh_CN.po            # Simplified Chinese translation source
