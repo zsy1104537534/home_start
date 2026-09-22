@@ -17,7 +17,7 @@ This document exists so that **anyone — a human developer or an AI assistant (
 * License: **CC-BY-SA 3.0** (the same license as CDDA's own content) — see `LICENSE`
 * Developed and verified against CDDA **0.I / build `2026-09-19-2324`** (commit `7b2efa5`)
 * Dependency: `dda` only. No new items, monsters or tiles — everything it spawns is vanilla, so **no tileset work is required**.
-* **Supported versions:** CDDA **0.I** stable (`0.I` / `0.I-1`; this mod is developed and verified on build `2026-09-19-2324`, commit `7b2efa5`). **0.H and older do not work** — the start script's `u_run_monster_eocs` effect does not exist there (`src/npctalk.cpp`: absent in the `0.H` tag, present in `0.I`), so the scenario fails to load. On **experimental** builds the mod plays normally, but the **riot-damage patch is inert**: upstream now delivers riot damage through `post_process_generators: [ "riot_damage" ]` in the terrain data instead of the `PP_GENERATE_RIOT_DAMAGE` overmap flag, and removing the flag neither errors nor changes anything (the flag itself still exists in the engine). One JSON cannot serve both, because 0.I rejects the new field.
+* **Supported versions:** CDDA **0.I** stable (`0.I` / `0.I-1`; this mod is developed and verified on build `2026-09-19-2324`, commit `7b2efa5`). **0.H and older do not work** — the start script's `u_run_monster_eocs` effect does not exist there (`src/npctalk.cpp`: absent in the `0.H` tag, present in `0.I`), so the scenario fails to load. On **experimental** builds the mod plays normally and riot damage is handled by the same `riot_patch.json`: it deletes the new `post_process_generators: [ "riot_damage" ]` entry as well as the old flag, and the key a given version does not know is ignored (see §5). That experimental path is **not yet verified in game**.
 
 ## 2. Repository layout
 
@@ -47,8 +47,6 @@ This document exists so that **anyone — a human developer or an AI assistant (
         ├── po/zh_CN.po            # Simplified Chinese translation source
         └── mo/zh_CN/LC_MESSAGES/home_start.mo   # compiled translation the game loads
 ```
-
-`home_start_riot_patch/` sits **next to** `home_start/` and is a separate mod for experimental builds only (see §1, §5). It carries just a `modinfo.json` and an `overmap_terrain.json`.
 
 ## 3. Design intent
 
@@ -105,7 +103,7 @@ The shipped `.mo` is reproducible: compiling `zh_CN.po` with the gettext compile
 * `start_locations.json` currently lists six upper-floor terrains (`..._002/102/012/112/013/113`). The half-floors `..._011`/`..._111` look like the same plan and could probably be added, but that has not been verified in game — check the floor you spawn on before adding them.
 * The whole mod only affects **new characters and newly generated maps**.
 * Incompatible with total conversions that remove cities (`innawood`, `The Backrooms`, `Sky Island`, `Defense Mode`).
-* **Version support** (details in §1): 0.I only. 0.H and older fail to load the scenario (`u_run_monster_eocs` is missing); on experimental builds only the riot-damage patch is lost.
+* **Version support** (details in §1): 0.I. 0.H and older fail to load the scenario (`u_run_monster_eocs` is missing). Experimental builds run the whole mod, riot patch included, but that path has not been verified in game.
 * **Install traps** (details in §5): the mod must go into the *user* mod directory, never `data/mods/` (translations would be ignored); the folder name may not matter but the mod `id` may not exist twice — delete the old folder when updating; a nested "Download ZIP" folder is fine because `modinfo.json` is found recursively.
 * Mods that patch the same overmap terrain entries (`apartments_con_tower_*`), such as **Alternative Map Key**, may override this mod's riot patch or be overridden by it depending on load order; the visible effect is cosmetic (overmap icon/colour) and neither mod errors.
 * Not accepted into the official CDDA repository as-is: `doc/IN_REPO_MODS.md` requires a long-term curator and forbids mods whose only purpose is to switch off a working vanilla feature; the riot patch would have to be argued as part of the "clean flat" concept.
@@ -122,7 +120,7 @@ gh release create v<version> <zip> --title "Home Start <version>" --notes-file <
 
 If `git` cannot reach `github.com:443` (it is intermittently blocked on the development machine's network, while `gh` keeps working because it talks to `api.github.com`), publishing still works through the Git Data API: POST blobs → tree (with `base_tree`) → commit → PATCH the `main` ref, then `gh release create`. **Tag every release with the exact commit that was published, and never move an existing tag onto a different commit** — a tag that was re-pointed after its asset had been replaced is exactly how v1.0.3 briefly shipped a tag and a ZIP that disagreed.
 
-The release ZIP contains **two** top-level folders: `home_start/` and `home_start_riot_patch/` (the latter is for experimental builds only — see §5). Both are meant to be extracted into the game's **user mod directory** (see §5 for why `data/mods/` breaks translations).
+The release ZIP contains a single top-level `home_start/` folder, meant to be extracted into the game's **user mod directory** (see §5 for why `data/mods/` breaks translations).
 
 **Build the ZIP with a tool that writes `/` separators.** This project uses bsdtar: `tar -a -c -f home_start-<version>.zip -C <staging> home_start`. PowerShell's `Compress-Archive` writes `home_start\lang\…` with **backslashes**, which Windows extracts happily but macOS/Linux `unzip` turns into one literal filename — every release up to 1.0.5 had this bug. Verify after packaging that no entry name contains a backslash (e.g. list `ZipFile.OpenRead( zip ).Entries | % FullName`). Players who use **Code → Download ZIP** instead get `home_start-main/home_start/…`, which also loads because `modinfo.json` is found recursively (§5).
 
