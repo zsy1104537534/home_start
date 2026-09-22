@@ -2,6 +2,10 @@
 
 A small content mod for **Cataclysm: Dark Days Ahead** that starts your survivor locked inside their own flat on an upper floor of a downtown apartment tower.
 
+![Waking up in your own flat](docs/start.png)
+
+*Waking up on your own bed, five days into the Cataclysm - the start message, the flat around you, and the streets outside your window.*
+
 * **Version:** 1.0.8
 * **Game:** CDDA **0.I** stable (developed and tested on `0.I-1`, build `2026-09-19-2324`, commit `7b2efa5`)
   * **0.H and older are not supported.** The start script uses the `u_run_monster_eocs` effect, which does not exist there (`src/npctalk.cpp` — absent in `0.H`, present in `0.I`), so the scenario fails to load.
@@ -91,6 +95,10 @@ Every JSON file must be style-clean, and every user-facing English string must h
 # 家中开局（中文说明）
 
 一个给 **《大灾变：黑暗之日》** 用的小型内容 mod：让你在自己位于市中心公寓楼**高层**的家里开局。
+
+![在自己家里的床上醒来](docs/start.png)
+
+*大灾变第五天，在自己的床上醒来——开局提示、身边的房间，还有窗外的街道。*
 
 | 内容 | 说明 |
 |---|---|
