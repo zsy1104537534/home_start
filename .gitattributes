@@ -1,0 +1,4 @@
+# Keep the JSON files byte-identical to what the game's json_formatter produces (LF endings)
+* text=auto eol=lf
+*.png binary
+*.mo binary
