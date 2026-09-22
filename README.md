@@ -2,7 +2,7 @@
 
 A small content mod for **Cataclysm: Dark Days Ahead** that starts your survivor locked inside their own flat on an upper floor of a downtown apartment tower.
 
-* **Version:** 1.0.6
+* **Version:** 1.0.7
 * **Game:** CDDA **0.I** stable (developed and tested on `0.I-1`, build `2026-09-19-2324`, commit `7b2efa5`)
   * **0.H and older are not supported.** The start script uses the `u_run_monster_eocs` effect, which does not exist there (`src/npctalk.cpp` — absent in `0.H`, present in `0.I`), so the scenario fails to load.
   * **On experimental builds** the mod loads and plays normally, but the **riot-damage patch has no effect**: upstream now delivers riot damage through a `post_process_generators: [ "riot_damage" ]` entry in the terrain data instead of the `PP_GENERATE_RIOT_DAMAGE` overmap flag, so removing the flag changes nothing — and it does not error either, because the flag itself still exists in the engine. One file cannot cover both: 0.I does not know the new field.
@@ -26,8 +26,8 @@ A small content mod for **Cataclysm: Dark Days Ahead** that starts your survivor
 ## Installation
 
 1. Get the mod — both routes work:
-   * **Release ZIP:** it contains a top-level `home_start/` folder. Drop that folder into the game's **user mod directory** (step 2).
-   * **Code → Download ZIP** on this repository: you get `home_start-main/`, which contains `home_start/` *and* the documentation. The game searches for `modinfo.json` **recursively**, so dropping the whole `home_start-main` folder in also loads correctly (Chinese translation included). Putting just the inner `home_start/` folder in is tidier.
+   * **Release ZIP:** it contains **two** top-level folders — `home_start/` (the mod itself) and `home_start_riot_patch/` (a small companion patch, explained below). **On 0.I / 0.I-1 you only need `home_start`.** On an **experimental** build, copy both.
+   * **Code → Download ZIP** on this repository: you get `home_start-main/`, which contains both folders *and* the documentation. The game searches for `modinfo.json` **recursively**, so dropping the whole `home_start-main` folder in also loads correctly (Chinese translation included). Putting just the inner folder(s) in is tidier.
 2. The **user mod directory** is not always the folder next to the executable:
 
    | Install | Where the mod folder goes |
@@ -42,9 +42,16 @@ A small content mod for **Cataclysm: Dark Days Ahead** that starts your survivor
 5. Create a **new world** and enable **Home Start** in the mod list.
 6. Pick the *Home Start* scenario — only the *Homebody Survivor* profession is offered. A custom character works fine; **do not use an old character preset**, since presets carry their own saved inventory.
 
-Notes:
+### The companion patch (`home_start_riot_patch`)
 
-* Mods and world settings only affect **new characters**; existing saves keep whatever they were created with.
+This is a separate, tiny mod whose **only** job is the riot damage: it keeps the apartment tower interiors clear of it, so windows are whole, furniture is not smashed and there is no blood or fire. It exists because upstream changed how that damage is applied — on **experimental builds** riot damage comes from a `post_process_generators` entry rather than the old overmap flag that `home_start` removes. The patch deletes that entry, using the same mechanism CDDA uses for its own terrains.
+
+* **On an experimental build:** copy it next to `home_start` in the user mod directory and enable **both** in the world's mod list. It declares a dependency on `home_start`, so it shows as unavailable if that mod is missing or off.
+* **On 0.I / 0.I-1:** it is not needed — `home_start` already handles riot damage there. Enabling it anyway does nothing: those versions do not have that data field, so the deletion is simply ignored (verified: `--check-mods home_start_riot_patch` exits clean on `0.I-1`).
+* It adds no items, monsters, terrain or mapgen, and does not touch anything else.
+* Honest caveat: it mirrors the mechanism upstream uses itself, but it has not been tested on an experimental build yet (the author develops on `0.I-1`). If riot damage still shows up there, that is a bug worth reporting.
+
+Notes: **new characters**; existing saves keep whatever they were created with.
 * Using an existing world is not recommended. If you do add this mod to one, only newly generated map areas get the patch.
 
 ## Language
@@ -101,7 +108,13 @@ Every JSON file must be style-clean, and every user-facing English string must h
 
 **用户 mod 目录**不一定和 exe 同级：Windows / Linux 官方压缩包（便携版）是 exe 旁边的 `mods\`；**macOS** 是 `~/Library/Application Support/Cataclysm/mods/`；**Linux 包管理器安装**是 `~/.local/share/cataclysm-dda/mods/`（或 `$XDG_DATA_HOME/cataclysm-dda/mods/`，很老的版本用 `~/.cataclysm-dda/mods/`）。**刚解压的游戏没有 `mods\` 这个文件夹**，先启动一次游戏它就会自己建，也可以自己新建。**绝对不要放 `data\mods\`** —— 游戏只从用户 mod 目录读第三方 mod 自带的翻译，放 `data\mods\` 虽然能玩，但**中文不会生效**。**升级前先删掉旧的 `home_start` 文件夹**，两个同 id 的文件夹会让游戏报 `there is already a mod with ident home_start`。
 
-**版本要求**：需要 **0.I** 稳定版（`0.I` / `0.I-1`，本 mod 在 `2026-09-19-2324` 上开发验证）；**0.H 及更早不支持**（开局脚本用的 `u_run_monster_eocs` 那些版本里没有，场景会加载失败）；**实验版**能正常游玩，但**暴乱破坏补丁不生效**（上游已改用 `post_process_generators: ["riot_damage"]`，不再用那个 flag；flag 本身还在引擎里，所以既不报错也没效果）。同一份文件没法同时兼容两边，因为 0.I 不认识新字段。
+**附属补丁（`home_start_riot_patch`）**：这是个独立的小 mod，**只干一件事**——让公寓楼室内没有暴乱破坏（窗户完整、家具没被砸、没有血迹和火灾）。之所以单独拆出来，是因为上游换了实现方式：**实验版**里暴乱破坏由 `post_process_generators` 产生，而 `home_start` 删掉的是旧的那个 flag，所以在实验版上失效。这个补丁用上游自己的机制把那条生成器删掉。
+
+- **实验版玩家**：把它和 `home_start` 一起放进用户 mod 目录，新世界的模组列表里**两个都勾**（它依赖 `home_start`，主 mod 没启用时它会显示为不可用）。
+- **0.I / 0.I-1 玩家**：不需要它，`home_start` 自己已经处理了。就算放进去了也没副作用——那些版本没有这个数据字段，删除操作会被直接忽略（已实测：`--check-mods home_start_riot_patch` 在 `0.I-1` 上退出码 0）。
+- 它不新增物品/怪物/地形/地图，也不改别的东西。
+- 老实说一句：写法与上游自己的用法一致，但**还没在实验版上实测过**（作者本机是 `0.I-1`）。如果实验版上暴乱破坏依旧，那就是 bug，欢迎回报。
+（`0.I` / `0.I-1`，本 mod 在 `2026-09-19-2324` 上开发验证）；**0.H 及更早不支持**（开局脚本用的 `u_run_monster_eocs` 那些版本里没有，场景会加载失败）；**实验版**能正常游玩，但**暴乱破坏补丁不生效**（上游已改用 `post_process_generators: ["riot_damage"]`，不再用那个 flag；flag 本身还在引擎里，所以既不报错也没效果）。同一份文件没法同时兼容两边，因为 0.I 不认识新字段。
 
 **兼容性**：可以和 `classic_zombies`、`Only_Wildlife`、`Magiclysm` 等共存；**不能**和删掉城市的完全转换类（`innawood`、`The Backrooms`、`Sky Island`、`Defense Mode`）一起用；和同样修改这些大地图地形（`apartments_con_tower_*`）的 mod（例如 **Alternative Map Key**）一起用时，谁覆盖谁取决于加载顺序，**表现只是大地图图标/颜色**，不会报错。
 

@@ -1,0 +1,12 @@
+[
+  {
+    "type": "MOD_INFO",
+    "id": "home_start_riot_patch",
+    "name": "Home Start: Riot Damage Patch (experimental builds only)",
+    "authors": [ "zsy1104537534" ],
+    "description": "Companion patch for Home Start.  It does one single thing: it keeps the apartment tower interiors clear of the random riot damage, so the windows are whole, the furniture is not smashed and there is no blood or fire.  Enable it together with Home Start only on a CDDA experimental build, where riot damage is delivered differently.  On 0.I and 0.I-1 Home Start already handles this itself, so this patch is not needed there.  See the README for details.",
+    "category": "content",
+    "dependencies": [ "dda", "home_start" ],
+    "version": "1.0.7"
+  }
+]
