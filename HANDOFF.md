@@ -27,7 +27,7 @@ This document exists so that **anyone — a human developer or an AI assistant (
 ├── .gitattributes     # forces LF so JSON stays byte-identical to json_formatter output
 ├── HANDOFF.md         # this file
 └── home_start/        # ← this folder is the mod; copy it into <game>/mods/  (NOT data/mods/ - see §5)
-    ├── modinfo.json       # MOD_INFO: id home_start, category content, dependency dda, version 1.0.0
+    ├── modinfo.json       # MOD_INFO: id home_start, category content, dependency dda, version is kept in sync with modinfo.json
     ├── scenarios.json     # scenario id "home_start": allowed_locs [sloc_apt_interior], profession
     │                      #   prof_homebody, flags CITY_START + LONE_START, eoc [EOC_home_start].
     │                      #   Start dates are left at the vanilla defaults on purpose - the engine
@@ -66,9 +66,9 @@ A quiet, self-contained opening. Your floor is clean and lootable; the streets o
 * **`passable_only` does not apply to furniture or terrain searches** — it only affects the random-offset branch of the location search.
 * **`u_spawn_item` works.** It reaches `talker_character::i_add_or_drop( item &, bool force_equip )` (`src/talker_character.cpp`), which wears the item if it is wearable, else wields it when there is no hand conflict, and otherwise falls through to `Character::i_add_or_drop( item & )` with the default count of 1 — i.e. the item simply goes into the inventory. `force_equip: true` means "wear or wield it", **not** "spawn one". (An earlier version of this file wrongly claimed the flag was passed into the item count and that nothing spawned; that was a misreading of the `Character::` overload and has been corrected.)
 * **`map_spawn_item` without `loc`** places the item on the talker's own tile — useful when the exact container is unknown.
-* Monster banish EOCs use the avatar-side spell cast; `BEGONE_SHADOW` is vanilla, so this mod inherits its limits.
+* `u_run_monster_eocs` evaluates its EOC with the **monster** as the talker, so the banish spell is cast by each monster in turn (and the `{"not": "u_is_outside"}` condition therefore tests the monster, not the player).  `BEGONE_SHADOW` is vanilla, so this mod inherits its limits.
 * **A third-party mod's own `.mo` files are only loaded from the user mod directory.** `TranslationManager::Impl::ScanTranslationDocuments()` scans exactly two places: `PATH_INFO::user_moddir()` (= `<gamedir>/mods/` in this portable install) for any `*.mo`, and `lang/mo/` for `cataclysm-dda.mo`. A mod installed under `data/mods/` therefore runs fine but **its bundled translations are silently ignored** — which is why the Chinese translation only works from `mods/`. The running game states this in `config/debug.log`: `[i18n] Scanning mod translations from ./mods/`.
-* **Do not use the `{ "mutator": "u_loc_relative", "target": "(1,0,0)" }` variable object in this build (0.I, 2026-09-19).** Writing it as the `loc` of `map_spawn_item` makes the game **crash with SIGSEGV / fail-fast** whenever it reports a JSON error — the crash happens inside `JsonObject::error_skipped_members` (`crash.log`), so the checker dies before printing the message and `debug.log` stays empty. It cost an afternoon to find. Use a searched location variable (`u_location_variable` + `map_spawn_item` with `loc: { "u_val": … }`) or `u_spawn_item` instead. Note the doc `doc/JSON/EFFECT_ON_CONDITION.md` still shows the crashing form in its `map_spawn_item` example.
+* **`loc` does not accept a `mutator` variable object.** `map_spawn_item` reads its `loc` through `read_var_info`, which handles `u_val` / `npc_val` / `global_val` / `context_val` / `var_val` / `const_val` / `math` / `distance` — not `mutator`/`target`. Note that `doc/JSON/EFFECT_ON_CONDITION.md` shows the unsupported form in its `map_spawn_item` example. In this build the failure is worse than a JSON error: writing it made every `--check-mods` run **crash with SIGSEGV / fail-fast inside `JsonObject::error_skipped_members`** (`crash.log`), i.e. the checker died while reporting the error, leaving `debug.log` empty and taking an afternoon to trace. Use a searched location variable (`u_location_variable` + `loc: { "u_val": … }`) or `u_spawn_item` instead.
 * General CDDA notes that are **not** used by this mod (kept here so they are not confused with the above): `upgrades.half_life` is multiplied by the world option `EVOLUTION_INVERSE_MULTIPLIER` (larger = slower evolution); `MONSTER_WHITELIST` with `mode: EXCLUSIVE` only takes effect when at least one whitelist entry is non-empty.
 
 ## 6. How to verify a checkout
@@ -102,15 +102,15 @@ Translation coverage: every user-facing English string must exist as a `msgid` i
 gh auth setup-git
 
 git add -A && git commit -m "…" && git push
-gh release create v1.0.0 <zip> --title "Home Start 1.0.0" --notes-file <notes.md>
+gh release create v<version> <zip> --title "Home Start <version>" --notes-file <notes.md>
 ```
 
-The release ZIP must contain a top-level `home_start/` folder so players can extract it straight into `data/mods/`.
+The release ZIP contains a top-level `home_start/` folder, meant to be extracted into the game's **`mods/`** directory (the user mod folder — see §5 for why `data/mods/` breaks translations).
 
 ## 9. 中文速览
 
 * 这是什么：CDDA 的数据 mod，让你在自己家（市中心公寓楼高层）里开局；只有 JSON，没有新增物品/怪物/贴图。
 * 文件在哪：仓库根目录放文档，**`home_start/` 子目录就是 mod 本体**，复制进 `<游戏>/mods/`（**不是** `data/mods/`，否则自带的汉化不会加载，见第 5 节）；`lang/po/` 是翻译源文件，`lang/mo/` 是游戏读取的成品。
-* 开局脚本做什么：弹一句提示 → 按 6→12→24 格**分阶段**找床（一次性大半径会永远传送到该层最西北角那张床）→ 把撬棍放在床边 1~2 格的家具上（绝不放在床上；床边没家具时才进背包） → 对 60 格内**室内**的怪 + 20 格内所有怪施放 `BEGONE_SHADOW` 清场；**不改饥饿口渴**。
+* 开局脚本做什么：弹一句提示 → 按 6→12→24 格**分阶段**找床（一次性大半径会永远传送到该层最西北角那张床）→ 把撬棍放在床边 1~2 格的家具上（绝不放在床上；床边没家具时直接交到你手上（撬棍塞不进口袋）） → 对 60 格内**室内**的怪 + 20 格内所有怪施放 `BEGONE_SHADOW` 清场；**不改饥饿口渴**。
 * 验证方式：`cataclysm-tiles.exe --check-mods home_start`（退出码 0）、`json_formatter.exe`（官方格式）、中文语言包覆盖率。
 * 踩过的坑见第 5 节（英文句末必须两个空格、`u_location_variable` 取的是"第一个"不是"最近的"、`target_min_radius` 是"跳过"语义、`passable_only` 对家具搜索无效、`u_spawn_item` 其实是好的）。

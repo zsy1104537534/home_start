@@ -2,7 +2,7 @@
   {
     "type": "effect_on_condition",
     "id": "EOC_home_start",
-    "//": "Start script.  1) A short popup so the player knows where they are.  2) Teleport onto a bed in the flat: the engine's own start placement tends to drop the player in a corridor or at the map edge.  The bed search radius grows in stages (6 -> 12 -> 24 tiles) on purpose: u_location_variable scans its bounding box in row-major order and stops at the first match, so a single large radius always lands on the north-west-most bed of the floor, which can be a neighbouring flat or even another building.  Bathtub is the last fallback.  3) Leave a crowbar next to the bed - on any furniture 1-2 tiles away (the minimum radius skips the tile the player is lying on, so it never lands on the bed), or one tile east of the player if there is no furniture there.  4) Cast the vanilla BEGONE_SHADOW spell on every monster within 60 tiles that is indoors, and on everything within 20 tiles, to clear the player's own floor.  Does not touch hunger or thirst: the character starts in a normal state.",
+    "//": "Start script.  1) A short popup so the player knows where they are.  2) Teleport onto a bed in the flat: the engine's own start placement tends to drop the player in a corridor or at the map edge.  The bed search radius grows in stages (6 -> 12 -> 24 tiles) on purpose: u_location_variable scans its bounding box in row-major order and stops at the first match, so a single large radius always lands on the north-west-most bed of the floor, which can be a neighbouring flat or even another building.  Bathtub is the last fallback.  3) Leave a crowbar on furniture 1-2 tiles from the bed: target_min_radius 0 skips exactly the tile the player is lying on, so it can never land on the bed. When no such furniture exists the crowbar is handed to the player with u_spawn_item - it ends up in their hands, since the item is too long for a pocket.  4) Cast the vanilla BEGONE_SHADOW spell on every monster within 60 tiles that is indoors, and on everything within 20 tiles, to clear the player's own floor.  Does not touch hunger or thirst: the character starts in a normal state.",
     "eoc_type": "ACTIVATION",
     "effect": [
       {
@@ -61,7 +61,7 @@
       {
         "u_location_variable": { "u_val": "crowbar_spot" },
         "furniture": "",
-        "target_min_radius": 1,
+        "target_min_radius": 0,
         "target_max_radius": 2,
         "true_eocs": [
           { "id": "EOC_crowbar_on_furniture", "effect": [ { "map_spawn_item": "crowbar", "loc": { "u_val": "crowbar_spot" } } ] }
