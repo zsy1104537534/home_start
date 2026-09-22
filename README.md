@@ -2,7 +2,7 @@
 
 A small content mod for **Cataclysm: Dark Days Ahead** that starts your survivor locked inside their own flat on an upper floor of a downtown apartment tower.
 
-* **Version:** 1.0.4
+* **Version:** 1.0.5
 * **Game:** CDDA 0.I and newer experimental builds (developed and tested on build `2026-09-19-2324`, commit `7b2efa5`)
 * **Dependencies:** `dda` only
 * **License:** CC-BY-SA 3.0 (same as the game's content license)
