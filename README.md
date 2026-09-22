@@ -23,7 +23,7 @@ A small content mod for **Cataclysm: Dark Days Ahead** that starts your survivor
 
 ## Installation
 
-1. Download the repository (or a release ZIP) and put the folder named `home_start` into your game's `data/mods/` directory.
+1. Download the release ZIP (or clone this repository — the mod itself is the `home_start/` folder inside it) and put the folder named `home_start` into your game's `data/mods/` directory.
 2. Create a **new world** and enable **Home Start** in the mod list.
 3. Pick the *Home Start* scenario — only the *Homebody Survivor* profession is offered. A custom character works fine; **do not use an old character preset**, since presets carry their own saved inventory.
 
